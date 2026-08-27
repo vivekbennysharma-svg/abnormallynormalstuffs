@@ -1,0 +1,142 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>abnormallynormalstuffs</title>
+  <link href="https://fonts.googleapis.com/css2?family=Lora:ital,wght@0,400;0,500;0,600;1,400&family=DM+Sans:wght@300;400;500;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="style.css">
+  <link rel="icon" href="Logo 1.png">
+</head>
+<body>
+
+  <nav>
+    <a class="nav-logo" href="#" onclick="navigateTo('home')">
+      <img src="Logo 1.png" alt="Logo" style="width: 50px; height: auto; vertical-align: middle; margin-right: 8px;"> 
+      abnormallynormalstuffs
+    </a>
+    <div class="nav-links">
+      <a href="#" class="nav-item active" id="nav-home" onclick="navigateTo('home')">home</a>
+      <a href="#" class="nav-item" id="nav-blogs" onclick="navigateTo('blogs')">blogs</a>
+      <a href="#" class="nav-item" id="nav-about" onclick="navigateTo('about')">about</a>
+      <a href="#" class="nav-item" id="nav-contact" onclick="navigateTo('contact')">contact</a>
+      <a href="#" class="nav-item" id="nav-author" onclick="navigateTo('author')">workspace</a>
+    </div>
+  </nav>
+
+  <main class="content-container">
+    <section id="page-home" class="page-view active">
+      <div class="hero-intro-header">
+        <h1>ordinary magic, documented.</h1>
+        <p>A quiet notebook tracking micro-perspectives and daily observations.</p>
+      </div>
+      <h2 class="section-label">Featured Notes</h2>
+      <div class="posts-grid-mesh" id="featuredGrid"></div>
+    </section>
+
+    <section id="page-blogs" class="page-view">
+      <div class="search-controls-wrapper">
+        <input type="text" id="blogSearchInput" placeholder="Filter text strings..." oninput="handleSearch()">
+      </div>
+      <div class="category-filter-row" id="blogCategoryStrip"></div>
+      <div class="posts-grid-mesh" id="mainBlogGrid"></div>
+      <div class="empty-notice-block" id="blogsEmptyState" style="display: none;">No matches found matching search filters.</div>
+    </section>
+
+    <section id="page-about" class="page-view">
+      <div class="about-hero-block">
+        <div class="about-avatar-placeholder">A</div>
+        <h2>behind abnormallynormalstuffs</h2>
+        <p class="about-subtitle">Finding weight in the completely transient details.</p>
+      </div>
+      <div class="about-body-essay">
+        <p>This space functions simply as an open collector box. It is an intentional pushback against fast feeds and optimization metrics—preferring slow coffees, lingering shadows, and observations that don't necessarily have a takeaway lesson attached to them.</p>
+        <p>Thanks for walking through these logs. Feel free to stay as long as you'd like.</p>
+      </div>
+    </section>
+
+    <section id="page-contact" class="page-view">
+      <div class="contact-card-box">
+        <h2>reach out.</h2>
+        <p>Send over a thought, a book recommendation, or a simple greeting trace.</p>
+        <div class="contact-success-notice" id="contactSuccessFeedback" style="display: none;">
+          ✨ Message logged! Thank you for connecting.
+        </div>
+        <div class="contact-form-layout">
+          <input type="text" id="contactName" placeholder="Your name...">
+          <input type="text" id="contactEmail" placeholder="Your email channel...">
+          <textarea id="contactMessage" rows="6" placeholder="Write your words here..."></textarea>
+          <button class="action-submit-btn" onclick="processContactSubmission()">Dispatch Message</button>
+        </div>
+      </div>
+    </section>
+
+    <section id="page-post-view" class="page-view">
+      <div class="back-navigation-row">
+        <button onclick="navigateTo('blogs')">← Return back to listings</button>
+      </div>
+      <article class="master-article-document" id="activePostTarget"></article>
+    </section>
+
+    <section id="page-author" class="page-view">
+      <div id="authorGateContainer" class="login-frame-box">
+        <h3>Workspace Access PIN</h3>
+        <div class="pin-inputs-row">
+          <input type="password" maxlength="1" id="tokenDigit1" oninput="shiftTokenFocus(this, 'tokenDigit2')">
+          <input type="password" maxlength="1" id="tokenDigit2" oninput="shiftTokenFocus(this, 'tokenDigit3')">
+          <input type="password" maxlength="1" id="tokenDigit3" oninput="shiftTokenFocus(this, 'tokenDigit4')">
+          <input type="password" maxlength="1" id="tokenDigit4" oninput="verifyAuthorIdentity()">
+        </div>
+        <p class="error-text-line" id="tokenErrorOutput" style="display: none;">Invalid workspace control token identifier block.</p>
+      </div>
+
+      <div id="authorDashboardContainer" style="display: none;">
+        <div class="dashboard-split-grid">
+          <div class="editor-compose-pane">
+            <h3>Publish an Entry</h3>
+            <input type="text" id="postTitleField" placeholder="Post title entry...">
+            <input type="text" id="postCategoryField" placeholder="Category tag (default: musings)...">
+            <div class="emoji-picker-mesh" id="formEmojiGrid"></div>
+            <textarea id="postBodyContentField" rows="12" placeholder="Markdown supported details... Use '## ' for headers, '> ' for quotes."></textarea>
+            <button class="action-submit-btn" onclick="commitNewPostToSystem()">Publish Permanently to DB</button>
+          </div>
+          <div class="inventory-status-pane">
+            <h3>Inventory Registry</h3>
+            <div class="inventory-scroll-box" id="dashboardInventoryTarget"></div>
+            <button class="lock-session-btn" onclick="terminateAuthorSession()">Lock Workspace Session</button>
+          </div>
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <footer>
+    <div class="footer-grid-layout">
+      <div class="footer-brand-block">
+        <span class="footer-logo">abnormallynormalstuffs</span>
+        <p>Documenting life's ordinary magic through a completely clear lens.</p>
+      </div>
+      <div class="footer-nav-block">
+        <h4>Navigation Links</h4>
+        <ul>
+          <li><a href="#" onclick="navigateTo('home')">Home Hub</a></li>
+          <li><a href="#" onclick="navigateTo('blogs')">The Archives</a></li>
+          <li><a href="#" onclick="navigateTo('about')">The Author</a></li>
+          <li><a href="#" onclick="navigateTo('contact')">Reach Out</a></li>
+        </ul>
+      </div>
+      <div class="footer-meta-block">
+        <h4>Contact Channels</h4>
+        <a class="footer-mail-link" href="mailto:sonam.lhazom2005@gmail.com?subject=Hello%20from%20abnormallynormalstuffs" target="_blank">✉️ Email</a>
+      </div>
+    </div>
+    <div class="footer-copyright-bar">
+      <span>&copy; 2026 abnormallynormalstuffs. Built with precision and care. All rights reserved.</span>
+    </div>
+  </footer>
+
+  <div class="notification-toast" id="systemToastNotification">Notification message text placeholder</div>
+
+  <script type="module" src="script.js"></script>
+</body>
+</html>

@@ -1,0 +1,15 @@
+{
+  "name": "abnormallynormalstuffs-core",
+  "version": "1.0.0",
+  "description": "Full stack micro architecture with JSON database layer",
+  "main": "backend/server.js",
+  "scripts": {
+    "start-backend": "node backend/server.js"
+  },
+  "dependencies": {
+    "cors": "^2.8.5",
+    "dotenv": "^17.4.2",
+    "express": "^4.19.2",
+    "nodemailer": "^8.0.11"
+  }
+}
