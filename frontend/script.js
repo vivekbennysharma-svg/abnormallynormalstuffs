@@ -1,13 +1,17 @@
 // ── CONFIGURATION & API DATA PIPELINES ─────────────────────────────
-const API_URL = "http://localhost:3000/api/posts";
+const POSTS_API = "/api/posts";
+const QUOTE_API = "/api/quote";
+const CONTACT_API = "/api/contact";
+
 const SYSTEM_ADMIN_PIN = "1234";
 const AVAILABLE_EMOJIS = ["☕", "📓", "🌿", "🌸", "✨", "🪴", "🍵", "📷", "🌙", "🎨", "🌊", "🧁"];
 
 let activeFilterCategory = "all";
 let chosenFormEmoji = "☕";
+let draftQuoteText = "";
 
 let loadedInMemoryPosts = [];
-let loadedInMemoryLikes = {}; 
+let loadedInMemoryLikes = {};
 
 // INITIALIZE USER LIKES STORAGE SNAPSHOT REGISTRY ON BOOT
 try {
@@ -21,9 +25,9 @@ try {
 }
 
 // PULL RECORDS FROM SERVER ON APP BOOT
-async function synchronizeFromJSONDatabase() {
+async function synchronizeFromDatabase() {
   try {
-    const response = await fetch(API_URL);
+    const response = await fetch(POSTS_API);
     if (!response.ok) throw new Error("Could not parse file from storage pipe.");
     loadedInMemoryPosts = await response.json();
   } catch (error) {
