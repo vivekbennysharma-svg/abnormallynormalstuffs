@@ -98,6 +98,15 @@
             <input type="text" id="postCategoryField" placeholder="Category tag (default: musings)...">
             <div class="emoji-picker-mesh" id="formEmojiGrid"></div>
             <textarea id="postBodyContentField" rows="12" placeholder="Markdown supported details... Use '## ' for headers, '> ' for quotes."></textarea>
+
+            <div class="quote-field-block">
+              <label for="postQuoteField">Pull-quote <span class="optional-tag">optional . AI-generated</span></label>
+              <textarea id="postQuoteField" rows="2" placeholder="Leave blank to skip, or generateone with AI below..."></textarea>
+              <div class="quote-actions-row">
+                <button type="button" class="quote-ai-btn" id="generateQuoteBtn" onclick="generateAIQuoteForDraft()">✨ Generate quote with AI</button>
+                <button type="button" class="quote-clear-btn" onclick="clearDraftQuote()">Clear</button>
+              </div>
+            </div>
             <button class="action-submit-btn" onclick="commitNewPostToSystem()">Publish Permanently to DB</button>
           </div>
           <div class="inventory-status-pane">
@@ -137,6 +146,6 @@
 
   <div class="notification-toast" id="systemToastNotification">Notification message text placeholder</div>
 
-  <script type="module" src="script.js"></script>
+  <script src="script.js"></script>
 </body>
 </html>
