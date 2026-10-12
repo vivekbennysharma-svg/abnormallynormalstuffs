@@ -27,7 +27,7 @@ export async function postsHandler(req, res) {
             return send(res, 200, rows.map(normalizePost));
         }
         if(req.method === "POST") {
-            if(process.env.NODE_ENV === "production") return send(res, 403, {error: "Post mutations are disabled until server-side admin authentication is configured."});
+            if(process.env.NODE_ENV === "production" && process.env.ALLOW_PROD_WRITES !== "true") return send(res, 403, {error: "Post mutations are disabled until server-side admin authentication is configured."});
             if(!Array.isArray(req.body)) return send(res, 400, {error:"Expected an array of posts."});
             for(const p of req.body){
                 if(!p || !Number.isFinite(Number(p.id)) || !String(p.title ?? "").trim()) continue;
