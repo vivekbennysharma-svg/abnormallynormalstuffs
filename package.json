@@ -1,15 +1,20 @@
 {
-  "name": "abnormallynormalstuffs-core",
+  "name": "abnormallynormalstuffs",
   "version": "1.0.0",
-  "description": "Full stack micro architecture with JSON database layer",
-  "main": "backend/server.js",
+  "private": true,
+  "type": "module",
   "scripts": {
-    "start-backend": "node backend/server.js"
+    "dev": "node server.js",
+    "dev:vercel": "vercel dev"
   },
   "dependencies": {
-    "cors": "^2.8.5",
-    "dotenv": "^17.4.2",
-    "express": "^4.19.2",
-    "nodemailer": "^8.0.11"
+    "@neon/config": "^1.8.6",
+    "@neon/env": "^1.5.3",
+    "@neondatabase/serverless": "^1.0.0",
+    "dotenv": "^16.4.7",
+    "express": "^5.1.0"
+  },
+  "devDependencies": {
+    "vercel": "^63.1.2"
   }
 }

@@ -135,6 +135,7 @@ nav {
 .rendered-article-body p { margin-bottom: 1.25rem; }
 .rendered-article-body h2 { font-family: 'Lora', serif; font-size: 1.4rem; font-weight: 500; margin: 2rem 0 0.75rem; }
 .rendered-article-body blockquote { border-left: 3px solid var(--lavender-mid); padding-left: 1.25rem; font-style: italic; color: var(--warm-gray); margin: 1.5rem 0; }
+.article-ai-quote { border-left: 3px solid var(--lavender-dark); padding-left: 1.25rem; font-style: italic; font-family: 'Lora', serif; font-size: 1.15rem; color: var(--text); margin: 2rem 0; }
 .back-navigation-row button { background: none; border: none; color: var(--lavender-dark); font-size: 0.9rem; cursor: pointer; font-weight: 500; }
 
 /* AUTHOR GATEWAY & MANAGEMENT WORKSPACE */
@@ -150,6 +151,16 @@ nav {
 .emoji-node { background: var(--white); border: 1px solid var(--border); width: 36px; height: 36px; border-radius: 6px; cursor: pointer; display: flex; align-items: center; justify-content: center; }
 .emoji-node.selected { background: var(--lavender-soft); border-color: var(--lavender-dark); }
 .editor-compose-pane input, .editor-compose-pane textarea { width: 100%; padding: 0.75rem; margin-bottom: 1rem; border: 1px solid var(--border); border-radius: 6px; font-family: inherit; }
+
+.quote-field-block { margin-bottom: 1rem; }
+.quote-field-block label { display: block; font-size: 0.82rem; font-weight: 500; margin-bottom: 0.4rem; color: var(--text); }
+.quote-field-block .optional-tag { font-weight: 400; color: var(--warm-gray); font-size: 0.78rem; margin-left: 0.3rem; }
+.quote-field-block textarea { font-style: italic; margin-bottom: 0.6rem; }
+.quote-actions-row { display: flex; gap: 0.6rem; }
+.quote-ai-btn { flex: 1; background: var(--lavender-soft); border: 1px solid var(--lavender-dark); color: var(--lavender-dark); padding: 0.6rem 1rem; border-radius: 6px; font-size: 0.85rem; font-weight: 500; cursor: pointer; transition: opacity 0.2s; }
+.quote-ai-btn:hover { opacity: 0.85; }
+.quote-ai-btn:disabled { opacity: 0.6; cursor: wait; }
+.quote-clear-btn { background: none; border: 1px solid var(--border); color: var(--warm-gray); padding: 0.6rem 1rem; border-radius: 6px; font-size: 0.85rem; cursor: pointer; }
 
 .inventory-scroll-box { max-width: 100%; max-height: 480px; overflow-y: auto; border: 1px solid var(--border); border-radius: 8px; background: var(--white); padding: 0.5rem; }
 .inventory-row-item { display: flex; justify-content: space-between; align-items: center; padding: 0.85rem; border-bottom: 1px solid var(--border); font-size: 0.88rem; }

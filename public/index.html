@@ -6,21 +6,21 @@
   <title>abnormallynormalstuffs</title>
   <link href="https://fonts.googleapis.com/css2?family=Lora:ital,wght@0,400;0,500;0,600;1,400&family=DM+Sans:wght@300;400;500;700&display=swap" rel="stylesheet">
   <link rel="stylesheet" href="style.css">
-  <link rel="icon" href="Logo 1.png">
+  <link rel="icon" href="assets\Logo 1.png">
 </head>
 <body>
 
   <nav>
-    <a class="nav-logo" href="#" onclick="navigateTo('home')">
-      <img src="Logo 1.png" alt="Logo" style="width: 50px; height: auto; vertical-align: middle; margin-right: 8px;"> 
+    <a class="nav-logo" href="#" onclick="navigateTo('home'); return false;">
+      <img src="assets\Logo 1.png" alt="Logo" style="width: 50px; height: auto; vertical-align: middle; margin-right: 8px;">
       abnormallynormalstuffs
     </a>
     <div class="nav-links">
-      <a href="#" class="nav-item active" id="nav-home" onclick="navigateTo('home')">home</a>
-      <a href="#" class="nav-item" id="nav-blogs" onclick="navigateTo('blogs')">blogs</a>
-      <a href="#" class="nav-item" id="nav-about" onclick="navigateTo('about')">about</a>
-      <a href="#" class="nav-item" id="nav-contact" onclick="navigateTo('contact')">contact</a>
-      <a href="#" class="nav-item" id="nav-author" onclick="navigateTo('author')">workspace</a>
+      <a href="#" class="nav-item active" id="nav-home" onclick="navigateTo('home'); return false;">home</a>
+      <a href="#" class="nav-item" id="nav-blogs" onclick="navigateTo('blogs'); return false;">blogs</a>
+      <a href="#" class="nav-item" id="nav-about" onclick="navigateTo('about'); return false;">about</a>
+      <a href="#" class="nav-item" id="nav-contact" onclick="navigateTo('contact'); return false;">contact</a>
+      <a href="#" class="nav-item" id="nav-author" onclick="navigateTo('author'); return false;">workspace</a>
     </div>
   </nav>
 
@@ -63,10 +63,10 @@
           ✨ Message logged! Thank you for connecting.
         </div>
         <div class="contact-form-layout">
-          <input type="text" id="contactName" placeholder="Your name...">
-          <input type="text" id="contactEmail" placeholder="Your email channel...">
+          <input type="text" id="contactName" placeholder="Your name..." autocomplete="name">
+          <input type="email" id="contactEmail" placeholder="Your email channel..." autocomplete="email">
           <textarea id="contactMessage" rows="6" placeholder="Write your words here..."></textarea>
-          <button class="action-submit-btn" onclick="processContactSubmission()">Dispatch Message</button>
+          <button type ="button" class="action-submit-btn" onclick="processContactSubmission()">Dispatch Message</button>
         </div>
       </div>
     </section>
@@ -98,6 +98,16 @@
             <input type="text" id="postCategoryField" placeholder="Category tag (default: musings)...">
             <div class="emoji-picker-mesh" id="formEmojiGrid"></div>
             <textarea id="postBodyContentField" rows="12" placeholder="Markdown supported details... Use '## ' for headers, '> ' for quotes."></textarea>
+
+            <div class="quote-field-block">
+              <label for="postQuoteField">Pull-quote <span class="optional-tag">optional · AI-generated</span></label>
+              <textarea id="postQuoteField" rows="2" placeholder="Leave blank to skip, or generate one with AI below..."></textarea>
+              <div class="quote-actions-row">
+                <button type="button" class="quote-ai-btn" id="generateQuoteBtn" onclick="generateAIQuoteForDraft()">✨ Generate quote with AI</button>
+                <button type="button" class="quote-clear-btn" onclick="clearDraftQuote()">Clear</button>
+              </div>
+            </div>
+
             <button class="action-submit-btn" onclick="commitNewPostToSystem()">Publish Permanently to DB</button>
           </div>
           <div class="inventory-status-pane">
@@ -135,8 +145,7 @@
     </div>
   </footer>
 
-  <div class="notification-toast" id="systemToastNotification">Notification message text placeholder</div>
-
-  <script type="module" src="script.js"></script>
+  <div class="notification-toast" id="systemToastNotification" role="status" aria-live="polite">Notification message text placeholder</div>
+  <script src="script.js"></script>
 </body>
 </html>

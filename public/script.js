@@ -1,13 +1,13 @@
 // ── CONFIGURATION & API DATA PIPELINES ─────────────────────────────
-const API_URL = "http://localhost:3000/api/posts";
-const SYSTEM_ADMIN_PIN = "1234";
+const API_URL = "/api/posts";
+const SYSTEM_ADMIN_PIN = "7306";
 const AVAILABLE_EMOJIS = ["☕", "📓", "🌿", "🌸", "✨", "🪴", "🍵", "📷", "🌙", "🎨", "🌊", "🧁"];
 
 let activeFilterCategory = "all";
 let chosenFormEmoji = "☕";
 
 let loadedInMemoryPosts = [];
-let loadedInMemoryLikes = {}; 
+let loadedInMemoryLikes = {};
 
 // INITIALIZE USER LIKES STORAGE SNAPSHOT REGISTRY ON BOOT
 try {
@@ -73,11 +73,11 @@ function buildPostCardElementMarkup(post, currentOriginView) {
     <div class="blog-hover-card" onclick="launchSinglePostView(${post.id})">
       <div class="card-graphics-header">${post.emoji || "🌿"}</div>
       <div class="card-main-body">
-        <span class="pill-tag">${post.tag}</span>
-        <h3>${post.title}</h3>
-        <p class="card-excerpt-text">${post.excerpt}</p>
+        <span class="pill-tag">${escapeHTML(post.tag)}</span>
+        <h3>${escapeHTML(post.title)}</h3>
+        <p class="card-excerpt-text">${escapeHTML(post.excerpt)}</p>
         <div class="card-meta-row">
-          <span class="card-date-lbl">${post.date}</span>
+          <span class="card-date-lbl">${escapeHTML(post.date)}</span>
           <button class="card-like-interaction ${isLikedByUser ? "active-state" : ""}" onclick="processLikeAction(event, ${post.id}, '${currentOriginView}')">
             <span>${isLikedByUser ? "❤️" : "🤍"}</span> ${post.likes}
           </button>
@@ -189,9 +189,10 @@ function displaySinglePostLayout(postId) {
 
   const userHasLiked = !!loadedInMemoryLikes[postId];
   targetElement.innerHTML = `
-    <span class="pill-tag">${targetDataNode.tag}</span>
-    <h1 class="rendered-article-title">${targetDataNode.title}</h1>
+    <span class="pill-tag">${escapeHTML(targetDataNode.tag)}</span>
+    <h1 class="rendered-article-title">${escapeHTML(targetDataNode.title)}</h1>
     <div class="rendered-article-body">
+      ${targetDataNode.quote ? `<blockquote class="article-ai-quote">${escapeHTML(targetDataNode.quote)}</blockquote>`:""}
       ${transformTextToBasicMarkdownHTML(targetDataNode.content)}
     </div>
     <div class="article-action-footer-row" style="margin-top:2.5rem; border-top:1px solid var(--border); padding-top:1.5rem;">
@@ -202,14 +203,20 @@ function displaySinglePostLayout(postId) {
   `;
 }
 
+function escapeHTML(value) {
+  return String(value??"").replace(/[&<>"']/g, (char)=>({
+    "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;", "'": "&#39;"
+  })[char]);
+}
+
 function transformTextToBasicMarkdownHTML(text) {
   if (!text) return "";
   return text.split("\n").map((row) => {
     const clean = row.trim();
-    if (clean.startsWith("## ")) return `<h2>${clean.slice(3)}</h2>`;
-    if (clean.startsWith("> ")) return `<blockquote>${clean.slice(2)}</blockquote>`;
+    if (clean.startsWith("## ")) return `<h2>${escapeHTML(clean.slice(3))}</h2>`;
+    if (clean.startsWith("> ")) return `<blockquote>${escapeHTML(clean.slice(2))}</blockquote>`;
     if (!clean) return "";
-    return `<p>${row}</p>`;
+    return `<p>${escapeHTML(row)}</p>`;
   }).join("");
 }
 
@@ -225,12 +232,13 @@ function processContactSubmission() {
   }
 
   // DISPATCH BACKEND STREAM LOG
-  fetch("http://localhost:3000/api/contact", {
+  fetch("/api/contact", {
     method: "POST",
     headers: { "Content-Type": "application/json" },
     body: JSON.stringify({ name: nameText, email: emailText, message: bodyText })
   })
-  .then(() => {
+  .then((response) => {
+    if(!response.ok) throw new Error("Contact request failed.");
     const noticeNode = document.getElementById("contactSuccessFeedback");
     if (noticeNode) {
       noticeNode.style.display = "block";
@@ -315,8 +323,8 @@ function generateDashboardInventoryMetrics() {
   frameTarget.innerHTML = loadedInMemoryPosts.map((post) => `
     <div class="inventory-row-item">
       <div class="inventory-info-meta">
-        <div class="title-line">${post.emoji} ${post.title}</div>
-        <div class="sub-line">${post.tag} • Likes: ${post.likes} ${post.isArchived ? "(ARCHIVED)" : ""}</div>
+        <div class="title-line">${escapeHTML(post.emoji)} ${escapeHTML(post.title)}</div>
+        <div class="sub-line">${escapeHTML(post.tag)} • Likes: ${post.likes} ${post.isArchived ? "(ARCHIVED)" : ""}</div>
       </div>
       <div class="inventory-actions-cluster">
         <button class="inventory-ctrl-btn btn-archive ${post.isArchived ? "active" : ""}" onclick="toggleArchiveStatus(${post.id})">
@@ -338,23 +346,25 @@ async function commitNewPostToSystem() {
   const fTitle = titleEl?.value.trim();
   const fTag = tagEl?.value.trim() || 'musings';
   const fContent = contentEl?.value.trim();
-
+  const quoteEl = document.getElementById('postQuoteField');
+  const fQuote = quoteEl?.value.trim() || '';
   if (!fTitle || !fContent) {
     triggerSystemToastFeedback('Please input necessary Title and Content sections.');
     return;
   }
 
-  const firstLine = String(fContent.split('\n') || '');
+  const firstLine = fContent.split('\n')[0] || '';
   const derivedExcerpt = firstLine.replace(/^[>#\s]+/, '').slice(0, 110) + '...';
 
   const newPost = {
     id: Date.now(),
-    title: fTitle.toLowerCase(),
+    title: fTitle,
     tag: fTag.toLowerCase(),
     emoji: chosenFormEmoji,
     isArchived: false,
     excerpt: derivedExcerpt,
     content: fContent,
+    quote: fQuote,
     likes: 0,
     date: new Date().toLocaleDateString('en-US', { month: 'long', day: 'numeric', year: 'numeric' })
   };
@@ -365,10 +375,11 @@ async function commitNewPostToSystem() {
   titleEl.value = '';
   if (tagEl) tagEl.value = '';
   contentEl.value = '';
+  if(quoteEl) quoteEl.value='';
   chosenFormEmoji = '☕';
 
   initializeDashboardSubsystemViews();
-  triggerSystemToastFeedback('Post uploaded into JSON database! 💾');
+  triggerSystemToastFeedback('Post uploaded! 💾');
 }
 window.commitNewPostToSystem = commitNewPostToSystem;
 
@@ -405,3 +416,37 @@ function triggerSystemToastFeedback(msg) {
 document.addEventListener("DOMContentLoaded", () => {
   synchronizeFromJSONDatabase();
 });
+
+
+function clearDraftQuote() {
+  const quoteField = document.getElementById("postQuoteField");
+
+  if (!quoteField) {
+    console.warn("Pull-quote field was not found.");
+    return;
+  }
+
+  quoteField.value = "";
+  quoteField.focus();
+  triggerSystemToastFeedback("Pull-quote cleared.");
+}
+
+window.clearDraftQuote = clearDraftQuote;
+
+function generateAIQuoteForDraft() {
+  const title = document.getElementById("postTitleField")?.value.trim();
+  const content = document.getElementById("postBodyContentField")?.value.trim();
+
+  if (!title || !content) {
+    triggerSystemToastFeedback(
+      "Add a post title and body before generating a quote."
+    );
+    return;
+  }
+
+  triggerSystemToastFeedback(
+    "AI quote generation will be connected in Phase 3."
+  );
+}
+
+window.generateAIQuoteForDraft = generateAIQuoteForDraft;
