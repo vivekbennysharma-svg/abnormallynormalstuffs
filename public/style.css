@@ -227,6 +227,8 @@ footer {
 .footer-meta-block p {
   font-size: 0.88rem; color: var(--warm-gray); margin-bottom: 0.5rem; line-height: 1.5;
 }
+.footer-mail-link { font-size: 0.88rem; color: var(--lavender-dark); text-decoration: none; transition: color 0.2s; }
+.footer-mail-link:hover { color: var(--lavender-mid); }
 .footer-copyright-bar {
   max-width: 960px; margin: 0 auto; border-top: 1px solid var(--border); padding-top: 1.5rem; text-align: center;
 }
