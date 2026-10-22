@@ -433,20 +433,56 @@ function clearDraftQuote() {
 
 window.clearDraftQuote = clearDraftQuote;
 
-function generateAIQuoteForDraft() {
-  const title = document.getElementById("postTitleField")?.value.trim();
-  const content = document.getElementById("postBodyContentField")?.value.trim();
-
-  if (!title || !content) {
-    triggerSystemToastFeedback(
-      "Add a post title and body before generating a quote."
-    );
-    return;
-  }
-
-  triggerSystemToastFeedback(
-    "AI quote generation will be connected in Phase 3."
-  );
+async function generateAIQuoteForDraft() {
+    const title = document
+        .getElementById("postTitleField")?.value.trim();
+    const content = document
+        .getElementById("postBodyContentField")?.value.trim();
+    if (!title || !content) {
+        triggerSystemToastFeedback(
+            "Add a post title and body before generating a quote."
+        );
+        return;
+    }
+    triggerSystemToastFeedback("✨ Generating your blog quote...");
+    try {
+        const response = await fetch("/api/posts", {
+            method: "POST",
+            headers: {
+                "Content-Type": "application/json"
+            },
+            body: JSON.stringify({
+                action: "generate-quote",
+                title,
+                content
+            })
+        });
+        const data = await response.json();
+        if (!response.ok) {
+            throw new Error(data.error || "Quote generation failed.");
+        }
+        // Find the existing quote field in your author dashboard.
+        const quoteField = document.getElementById("postQuoteField");
+        if (!quoteField) {
+            console.error(
+                "Quote generated, but postQuoteField was not found."
+            );
+            triggerSystemToastFeedback(
+                "Quote generated, but the quote input field was not found."
+            );
+            return;
+        }
+        quoteField.value = data.quote;
+        quoteField.dispatchEvent(
+            new Event("input", { bubbles: true })
+        );
+        triggerSystemToastFeedback("✨ Your blog quote is ready!");
+    } catch (error) {
+        console.error("AI quote generation failed:", error);
+        triggerSystemToastFeedback(
+            error.message || "Could not generate a quote. Please try again."
+        );
+    }
 }
 
 window.generateAIQuoteForDraft = generateAIQuoteForDraft;
