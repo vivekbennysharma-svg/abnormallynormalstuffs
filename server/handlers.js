@@ -74,12 +74,15 @@ export async function postsHandler(req, res) {
                         }
                     );
                     if (!geminiResponse.ok) {
+                        const geminiError = await geminiResponse.text();
                         console.error(
                             "Gemini request failed:",
-                            geminiResponse.status
+                            geminiResponse.status,
+                            geminiError
                         );
                         return send(res, 502, {
-                            error: "Gemini could not generate a quote. Please try again."
+                            error: "Gemini could not generate a quote. Please try again.",
+                            details: geminiError
                         });
                     }
                     const result = await geminiResponse.json();
