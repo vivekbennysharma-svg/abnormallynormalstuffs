@@ -68,7 +68,8 @@ export async function postsHandler(req, res) {
                                 }],
                                 generationConfig: {
                                     temperature: 0.8,
-                                    maxOutputTokens: 100
+                                    maxOutputTokens: 1024,
+                                    thinkingConfig: { thinkingLevel: "low" }
                                 }
                             }),
                             signal: AbortSignal.timeout(20000)
@@ -87,6 +88,8 @@ export async function postsHandler(req, res) {
                         });
                     }
                     const result = await geminiResponse.json();
+                    console.log("Gemini finishReason:", result.candidates?.[0]?.finishReason,
+                                "usage:",JSON.stringify(result.usageMetadata));
                     const quote = result.candidates?.[0]?.content?.parts
                         ?.map(part => part.text ?? "")
                         .join("")
