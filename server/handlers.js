@@ -72,7 +72,7 @@ export async function postsHandler(req, res) {
                                     thinkingConfig: { thinkingLevel: "low" }
                                 }
                             }),
-                            signal: AbortSignal.timeout(20000)
+                            signal: AbortSignal.timeout(8000)
                         }
                     );
                     if (!geminiResponse.ok) {
