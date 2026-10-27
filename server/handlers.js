@@ -70,7 +70,8 @@ export async function postsHandler(req, res) {
                                     temperature: 0.8,
                                     maxOutputTokens: 100
                                 }
-                            })
+                            }),
+                            signal: AbortSignal.timeout(20000)
                         }
                     );
                     if (!geminiResponse.ok) {
