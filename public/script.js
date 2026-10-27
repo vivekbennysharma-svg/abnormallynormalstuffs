@@ -457,7 +457,23 @@ async function generateAIQuoteForDraft() {
                 content
             })
         });
-        const data = await response.json();
+        const responseText = await response.text();
+
+        let data;
+        
+        try {
+            data = JSON.parse(responseText);
+        } catch (error) {
+            console.error(
+                "Quote API returned a non-JSON response:",
+                response.status,
+                responseText
+            );
+        
+            throw new Error(
+                `Quote API failed (${response.status}). Check Vercel logs.`
+            );
+        }
         if (!response.ok) {
             throw new Error(data.error || "Quote generation failed.");
         }
